@@ -75,7 +75,7 @@ public class PlayerHealth : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // Only take damage from projectiles/enemies, not the ground!
-        if (other.CompareTag("Bullet") || other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
             currentHealth -= 20;
             lastHitTime = Time.time;
