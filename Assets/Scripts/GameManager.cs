@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     float dayTimer; //Shows simulated time for in-game clock
 
     int taskCount; //Can be updated/increased with later waves
+
+    int playerMoneyCount;
     
 
     public List<KeyValuePair<string, string>> Tasks;
