@@ -1,32 +1,30 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CoreManager : MonoBehaviour
+public class CoreManager : MonoBehaviour, IInteractable 
 {
     public float coreCurrentHP;
     public float coreMaxHP;
 
-
+    public Inventory playerInventory; //objects will be placed on the core, and 
     public GameObject effectRadius;
 
-    public List<KeyValuePair<string, int>> Abilities;
+    public enum Abilities { NoBoost, RegenBoost, SpeedBoost, FireRateBoost };
+
+    public Abilities coreAttributes = Abilities.NoBoost;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
 
-        Abilities = new List<KeyValuePair<string, int>>
-        {
-            // new KeyValuePair<string, int>("", Mathf.RoundToInt(baseSpeed)),
-            // new KeyValuePair<string, int>("", Mathf.RoundToInt(currentHealth)),
-            // new KeyValuePair<string, int>("", shield),
-            // new KeyValuePair<string, int>("", playerLives)
-
-        };
     }
 
     // Update is called once per frame
     void Update()
+    {
+        
+    }
+
+    public void Interact()
     {
         
     }
