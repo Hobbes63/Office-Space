@@ -7,6 +7,12 @@ using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
+    public Camera mainCamera;
+    public float interactionDistance = 2f;
+
+    public GameObject interactionUI;
+    public TextMeshProUGUI interactionText;
+
     //Player Health Values
     TextMeshProUGUI health;
     public float currentHealth = 100.0f;
@@ -28,12 +34,12 @@ public class PlayerManager : MonoBehaviour
 
     // AudioManager audioManager;
 
-    // [Header("Footsteps")]
+    // [Header(-------------Footsteps-------------)]
     // [SerializeField] public AudioClip[] footstepSounds;
 
     // private AudioSource sfxSource;
 
-    // [Header("HP and Item pick-up")]
+    // [Header(-------------HP and Item pick-up-------------)]
     // [SerializeField] public AudioClip playerHurt;
     // [SerializeField] public AudioClip playerHeal;
     // [SerializeField] public AudioClip playerLifeUp;
