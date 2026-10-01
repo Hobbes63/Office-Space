@@ -18,10 +18,17 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0))
             OnClicked?.Invoke();
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape))
             OnExit?.Invoke();
+
+         if(Input.GetKeyDown(KeyCode.P))
+    {
+        Instantiate(cubePrefab,
+                    new Vector3(0,1,0),
+                    Quaternion.identity);
+    }
     }
 
     public bool IsPointerOverUI()
@@ -39,4 +46,6 @@ public class InputManager : MonoBehaviour
         }
         return lastPosition;
     }
+
+    [SerializeField] private GameObject cubePrefab;
 }

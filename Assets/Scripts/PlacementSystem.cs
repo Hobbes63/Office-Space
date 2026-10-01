@@ -14,14 +14,25 @@ public class PlacementSystem : MonoBehaviour
     [SerializeField]
     private Grid grid;
 
-    private void Update()
+    [SerializeField] 
+private GameObject towerPrefab;
+
+private void Update()
+{
+    Vector3 mousePosition = inputManager.GetSelectedMapPosition();
+    Vector3Int gridPosition = grid.WorldToCell(mousePosition);
+
+    mouseIndicator.transform.position = mousePosition;
+    cellIndicator.transform.position = grid.CellToWorld(gridPosition);
+
+    if (Input.GetMouseButtonDown(0))
     {
-
-        Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-        Vector3Int gridPosition = grid.WorldToCell(mousePosition);
-        mouseIndicator.transform.position = mousePosition;
-        cellIndicator.transform.position = grid.CellToWorld(gridPosition);
+        Instantiate(
+            towerPrefab,
+            grid.CellToWorld(gridPosition),
+            Quaternion.identity
+        );
     }
+}
 
- 
 }
