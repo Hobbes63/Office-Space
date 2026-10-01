@@ -16,7 +16,7 @@ public class Interactor : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() //Needs to be retooled for our camera environment
+    void Update() //Needs to be retooled for our camera environment, and the interactions be pointed from the player obj
     {
         if(Input.GetKeyDown(KeyCode.E)) {
             Ray r = new Ray(InteractorSource.position, InteractorSource.forward);

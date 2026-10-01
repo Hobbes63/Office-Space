@@ -5,17 +5,22 @@ using System.IO;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("< - - - - For Patrol Behavior - - - >")]
     public Transform[] Waypoints;
     public int curWaypoint = 0;
     bool ReversePath = false;
     bool RestartPath = false;
     public NavMeshAgent navAgent;
     Vector3 Destination;
+
+    [Header("< - - - - For 'Usual' Enemy Behavior - - - >")]
     public Transform playerPos;
     public Transform playerCorePos;
     public Transform nearbyTowerPos;
     public Transform currentTarget;
     float distance;
+
+    
     [Header("< - - - - - Attributes - - - - - >")]
     [SerializeField] float health;
     float maxHealth;
