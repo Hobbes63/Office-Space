@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-
+        speed = GetComponent<PlayerManager>().currentSpeed;
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
