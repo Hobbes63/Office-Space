@@ -138,7 +138,9 @@ public class PlayerManager : MonoBehaviour
         // Reset timer if player collides with enemy
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            currentHealth -= 20;
             lastHitTime = Time.time;
+            UpdateHealthDisplay();
         }
     }
 }
