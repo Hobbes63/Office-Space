@@ -124,6 +124,7 @@ public class PlayerManager : MonoBehaviour
     void Die()
     {
         Debug.Log("Player has died!");
+        SceneManager.LoadScene(0);
         // Add death logic here (reload scene, game over screen, etc.)
     }
 
