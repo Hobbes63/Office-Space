@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
     public float currentHealth = 100.0f;
     public float maximumHealth = 100.0f;
 
-    [SerializeField] public float currentSpeed; //adjust this to read from player controller
+    public float baseSpeed = 3.0f; //adjust this to read from player controller
 
     //Player Regen Controls
     private float lastHitTime = 0f;
@@ -61,7 +61,7 @@ public class PlayerManager : MonoBehaviour
 
         Stats = new List<KeyValuePair<string, int>>
         {
-            new KeyValuePair<string, int>("Speed", Mathf.RoundToInt(currentSpeed)),
+            new KeyValuePair<string, int>("Speed", Mathf.RoundToInt(baseSpeed)),
             new KeyValuePair<string, int>("Health", Mathf.RoundToInt(currentHealth)),
             //new KeyValuePair<string, int>("Shield", shield),
             new KeyValuePair<string, int>("Lives", playerLives)
