@@ -1,23 +1,72 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using System;
+using System.Collections.Generic;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
+    //Player Health Values
     TextMeshProUGUI health;
     public float currentHealth = 100.0f;
     public float maximumHealth = 100.0f;
 
+    public float baseSpeed = 3.0f; //adjust this to read from player controller
+
+    //Player Regen Controls
     private float lastHitTime = 0f;
     private float regenDelay = 10f;
-    private float regenAmount = 2f;
+    private float regenAmount = 0.1f;
     private float regenRate = 5f; // Regenerate every 1 second
     private float nextRegenTime = 0f;
+
+    public int playerLives;
+
+
+    public List<KeyValuePair<string, int>> Stats;
+
+    // AudioManager audioManager;
+
+    // [Header("Footsteps")]
+    // [SerializeField] public AudioClip[] footstepSounds;
+
+    // private AudioSource sfxSource;
+
+    // [Header("HP and Item pick-up")]
+    // [SerializeField] public AudioClip playerHurt;
+    // [SerializeField] public AudioClip playerHeal;
+    // [SerializeField] public AudioClip playerLifeUp;
+    // [SerializeField] public AudioClip playerDeath;
+
+    // private AudioSource playerHurtSource;
+    // private AudioSource playerHealSource;
+    // private AudioSource playerLifeUpSource;
+    // private AudioSource playerDeathSource;
+
+    public Inventory playerInventory;
+
+    private void Awake()
+    {
+        //audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     void Start()
     {
         health = GameObject.FindGameObjectWithTag("healthText").GetComponent<TextMeshProUGUI>();
         UpdateHealthDisplay();
         lastHitTime = Time.time;
+
+
+
+        Stats = new List<KeyValuePair<string, int>>
+        {
+            new KeyValuePair<string, int>("Speed", Mathf.RoundToInt(baseSpeed)),
+            new KeyValuePair<string, int>("Health", Mathf.RoundToInt(currentHealth)),
+            //new KeyValuePair<string, int>("Shield", shield),
+            new KeyValuePair<string, int>("Lives", playerLives)
+
+        };
     }
 
     void Update()
@@ -44,7 +93,7 @@ public class PlayerHealth : MonoBehaviour
         }
 
         UpdateHealthDisplay();
-        Debug.Log("Player regenerated 2 health. Current health: " + currentHealth);
+        Debug.Log("Player regenerated " + regenAmount + " health. Current health: " + currentHealth);
     }
 
     void UpdateHealthDisplay()
