@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EnemyManager
+public class EnemyManager : MonoBehaviour
 {
     int enemyCount;
     int enemyCountCap;
