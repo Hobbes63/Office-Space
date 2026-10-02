@@ -7,6 +7,10 @@ interface IInteractable
 
 public class Interactor : MonoBehaviour
 {
+    /*To Do List:
+        -Make the "if(Input.GetKeyDown(KeyCode.E)" abstracted so that the key can be changed
+        -Actually testing that this works lol
+    */
     public Transform InteractorSource;
     public float InteractRange;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

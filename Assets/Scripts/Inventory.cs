@@ -7,6 +7,11 @@ using System;
 
 public class Inventory : MonoBehaviour
 {
+    /*To Do List:
+        -
+        -
+    */
+
     public bool showingInventory;
 
     public string menuName;

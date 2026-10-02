@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
+    /*To Do List:
+        
+    */
     public Camera mainCamera;
     public float interactionDistance = 2f;
 
