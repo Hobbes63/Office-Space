@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
 {
+    /*To Do List: 
+        
+    */
     [SerializeField] GameObject enemiesPrefab;
 
     int enemyCount;
@@ -10,6 +13,7 @@ public class EnemyManager : MonoBehaviour
     int enemyMaxCapacity;
     int enemyWave;
 
+    bool shouldEnemySpawn;
 
     int enemiesDefeated;
     [SerializeField] public List<Transform> Spawnpoints;

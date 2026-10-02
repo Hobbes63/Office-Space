@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public class PlayerManager : MonoBehaviour
 {
     /*To Do List:
-        
+        Enable a way for the player to die, respawn
     */
     public Camera mainCamera;
     public float interactionDistance = 2f;
