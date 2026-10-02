@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
+    /*To Do List:
+        
+    */
     public Camera mainCamera;
     public float interactionDistance = 2f;
 
@@ -124,6 +127,7 @@ public class PlayerManager : MonoBehaviour
     void Die()
     {
         Debug.Log("Player has died!");
+        SceneManager.LoadScene(0);
         // Add death logic here (reload scene, game over screen, etc.)
     }
 

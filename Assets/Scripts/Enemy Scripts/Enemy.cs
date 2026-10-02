@@ -5,6 +5,7 @@ using System.IO;
 
 public class Enemy : MonoBehaviour
 {
+    /*To Do List:*/
     [Header("< - - - - For Patrol Behavior - - - >")]
     public Transform[] Waypoints;
     public int curWaypoint = 0;
@@ -20,7 +21,7 @@ public class Enemy : MonoBehaviour
     public Transform currentTarget;
     float distance;
 
-    
+
     [Header("< - - - - - Attributes - - - - - >")]
     [SerializeField] float health;
     float maxHealth;
@@ -47,15 +48,24 @@ public class Enemy : MonoBehaviour
         navAgent = GetComponent<NavMeshAgent>();
 
         playerPos = GameObject.Find("Player").transform;
-        playerCorePos = GameObject.Find("CubicleCore").transform;
+        playerCorePos = GameObject.Find("CoreCubicle").transform;
 
         speedModifier = 1;
+
+        baseSpeed = 3;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        RunBehaviors();
+
+        Destination = playerCorePos.position;
+        distance = Vector3.Distance(gameObject.transform.position, Destination);
+        if (distance <= 10 && distance > 5) 
+        {
+            navAgent.SetDestination(Destination);
+        }
     }
 
     void RunBehaviors()
@@ -87,10 +97,10 @@ public class Enemy : MonoBehaviour
     }
     void Seek()
     {
-        Destination = GameObject.Find("Player").transform.position; //This should change to the "target"
+        Destination = playerCorePos.position; //This should change to the "target" so it can be changed during runtime
         navAgent.SetDestination(Destination);
         distance = Vector3.Distance(gameObject.transform.position, Destination);
-        if (distance <= 10)
+        if (distance <= 5)
         {
             ChangeBehavior(Behaviors.Attack);
             navAgent.speed = baseSpeed * speedModifier;

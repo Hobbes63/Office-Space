@@ -4,6 +4,18 @@ using TMPro;
 
 public class CoreManager : MonoBehaviour, IInteractable 
 {
+    /*To Do List:
+    Needs to be made interactable with the player:
+        -Add Prompt to interact
+        -Should bring up a pop up UI with a few options:
+            -"Order Towers"
+            -"Check Stash (the inventory)"
+            -"Type up emails" (default task that is always optional for the player to earn some money, how it will work will be explained in another area/script)
+            -"..."
+        -Can be repairable if players have a "Toolkit" item
+        -[Functions from the pop up]"Clock in" (to start the day)/"Clock out" (to go to lunch)
+        -Could also be how players pause?
+    */
     public float coreCurrentHP;
     public float coreMaxHP;
 
