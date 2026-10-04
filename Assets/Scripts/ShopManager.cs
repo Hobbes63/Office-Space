@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ShopManager : MonoBehaviour, IInteractable
 {
-    [Header("Shop UI Icons")]
+    [Header("Shop UI")]
     public GameObject ShopUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
