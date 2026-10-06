@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     public SpriteRenderer sr;
 
+    public bool canMove = true;
+
     void Start()
     {
         speed = GetComponent<PlayerManager>().baseSpeed;
@@ -25,6 +27,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (!canMove)
+        {
+        return;
+        }
 
         float x = 0f;
         float y = 0f;

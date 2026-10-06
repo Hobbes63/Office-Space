@@ -29,7 +29,11 @@ public class CoreManager : MonoBehaviour, IInteractable
     public enum Abilities { NoBoost, RegenBoost, SpeedBoost, FireRateBoost };
 
     public Abilities coreAttributes = Abilities.NoBoost;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start is called once before the first execution of Update after the
+    //  MonoBehaviour is created
+
+    public GameObject taskPanel;
+
     void Start()
     {
 
@@ -94,10 +98,21 @@ public class CoreManager : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact()
+public void Interact()
+{
+    Debug.Log("Core Interacted!");
+
+    if (taskPanel != null)
     {
-        
+        taskPanel.SetActive(true);
     }
+
+    if (TaskManager.Instance != null)
+    {
+        TaskManager.Instance.StartTask();
+    }
+}
+
 
     public void BoostPlayerRegen()
     {

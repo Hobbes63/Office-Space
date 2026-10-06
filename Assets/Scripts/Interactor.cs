@@ -1,34 +1,43 @@
 using UnityEngine;
 
-interface IInteractable
+public interface IInteractable
 {
-    public void Interact();
+    void Interact();
 }
 
 public class Interactor : MonoBehaviour
 {
-    /*To Do List:
-        -Make the "if(Input.GetKeyDown(KeyCode.E)" abstracted so that the key can be changed
-        -Actually testing that this works lol
-    */
-    public Transform InteractorSource;
-    public float InteractRange;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Transform interactorSource;
+    [SerializeField] private float interactRange = 3f;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private LayerMask interactableLayer;
 
-    // Update is called once per frame
-    void Update() //Needs to be retooled for our camera environment, and the interactions be pointed from the player obj
+    private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E)) {
-            Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
-            if(Physics.Raycast(r, out RaycastHit hitInfo, InteractRange)) {
-                if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
-                    interactObj.Interact();
-                }
-            }
+        Debug.DrawRay(
+            interactorSource.position,
+            interactorSource.forward * interactRange,
+            Color.green
+        );
+
+        if (!Input.GetKeyDown(interactKey))
+            return;
+
+        Ray ray = new Ray(
+            interactorSource.position,
+            interactorSource.forward
+        );
+
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            interactRange,
+            interactableLayer))
+        {
+            IInteractable interactable =
+                hit.collider.GetComponentInParent<IInteractable>();
+
+            interactable?.Interact();
         }
     }
 }
