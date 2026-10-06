@@ -20,15 +20,24 @@ public class Interactor : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update() //Needs to be retooled for our camera environment, and the interactions be pointed from the player obj
+    void Update() //retooled to use overlapshere instead of raycast, detects all collisions around player instead of just in a specific direction
     {
         if(Input.GetKeyDown(KeyCode.E)) {
-            Ray r = new Ray(InteractorSource.position, InteractorSource.forward);
+            Collider[] hitColliders = Physics.OverlapSphere(InteractorSource.position, InteractRange);
+            foreach(Collider collider in hitColliders)
+            {
+                if(collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
+                    interactObj.Interact();
+                    return;
+                }
+            }
+            /*
             if(Physics.Raycast(r, out RaycastHit hitInfo, InteractRange)) {
                 if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
                     interactObj.Interact();
                 }
             }
+            */
         }
     }
 }
