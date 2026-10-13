@@ -9,9 +9,6 @@ public class Tower : MonoBehaviour
     [Header("Tower variables")]
     public TowerState state;
 
-    [Header("Player variables")]
-    public Transform carryPoint;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -31,15 +28,32 @@ public class Tower : MonoBehaviour
                 TowerBehavior();
                 break;
             case TowerState.Carried:
-                //Move tower to carry point while it is being carried
-                this.transform.position = carryPoint.position;
                 break;
         }
     }
 
-    public void Pickup()
+    public void SetState(TowerState newState)
     {
-        state = TowerState.Carried;
+        state = newState;
+
+        switch (state)
+        {
+            case TowerState.Inactive:
+                this.GetComponent<Collider>().enabled = true;
+                break;
+            case TowerState.Active:
+                this.GetComponent<Collider>().enabled = true;
+                break;
+            case TowerState.Carried:
+                //Carried state has tower change apperance to be transparent.
+                this.GetComponent<Collider>().enabled = false;
+                break;
+        }
+    }
+
+    public TowerState GetState()
+    {
+        return state;
     }
 
     public void TowerBehavior()
