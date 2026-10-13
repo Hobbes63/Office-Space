@@ -17,6 +17,9 @@ public class OfficeTimeManager : MonoBehaviour
 
     private float timer;
 
+    public EnemyManager enemyManager;
+
+
     private void Start()
     {
         currentHour = startHour;
@@ -39,6 +42,8 @@ public class OfficeTimeManager : MonoBehaviour
             {
                 currentMinute = 0;
                 currentHour++;
+
+                SpawnHourWave();
             }
 
             UpdateClock();
@@ -64,6 +69,34 @@ public class OfficeTimeManager : MonoBehaviour
             currentMinute.ToString("00") +
             " " + amPm;
     }
+
+    private int lastSpawnHour = -1;
+
+private void SpawnHourWave()
+{
+    if (currentHour == lastSpawnHour)
+        return;
+
+    lastSpawnHour = currentHour;
+
+    // No enemies during lunch
+    if (currentHour == 12)
+    {
+        Debug.Log("Lunch Break!");
+        return;
+    }
+
+    // Don't spawn after work
+    if (currentHour >= endHour)
+        return;
+
+    if (enemyManager != null)
+    {
+        Debug.Log("Spawning Hourly Wave");
+
+        enemyManager.SpawnWave();
+    }
+}
 
     private void EndWorkDay()
     {

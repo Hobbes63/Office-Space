@@ -1602,7 +1602,7 @@ GameObject:
   - component: {fileID: 355105633}
   - component: {fileID: 355105634}
   m_Layer: 0
-  m_Name: ClockTimeManager
+  m_Name: OfficeTimeManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1639,6 +1639,7 @@ MonoBehaviour:
   startHour: 9
   endHour: 17
   secondsPerGameMinute: 1
+  enemyManager: {fileID: 814826349}
 --- !u!1 &357836667
 GameObject:
   m_ObjectHideFlags: 0
@@ -3128,6 +3129,8 @@ MonoBehaviour:
   - {fileID: 1362915272}
   - {fileID: 1548661706}
   - {fileID: 886262435}
+  enemyCount: 0
+  enemyWave: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,46 +3,33 @@ using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
 {
-    /*To Do List: 
-        
-    */
-    [SerializeField] GameObject enemiesPrefab;
-
-    int enemyCount;
-    int enemyCountCap;
-    int enemyMaxCapacity;
-    int enemyWave;
-
-    bool shouldEnemySpawn;
-
-    int enemiesDefeated;
+    [SerializeField] private GameObject enemiesPrefab;
     [SerializeField] public List<Transform> Spawnpoints;
-    int currSpawnPoint;
 
-    void Start()
-    {
-        enemyCountCap = 15;
-    }
+    public int enemyCount;
+    public int enemyWave = 1;
 
-    void Update()
-    {
-        spawnEnemy();
-    }
+    private int enemyCountCap = 15;
 
-    public void spawnEnemy()
+    public void SpawnWave()
     {
-        if(enemyCount < enemyCountCap)
+        int enemiesToSpawn = enemyWave * 3;
+
+        Debug.Log($"Spawning Wave {enemyWave}");
+
+        for (int i = 0; i < enemiesToSpawn; i++)
         {
-            currSpawnPoint = Random.Range(0, 3);
-            GameObject newEnemy = Instantiate(
+            int spawnIndex = Random.Range(0, Spawnpoints.Count);
+
+            Instantiate(
                 enemiesPrefab,
-                Spawnpoints[currSpawnPoint].transform.position,
+                Spawnpoints[spawnIndex].position,
                 Quaternion.identity
             );
-            
+
             enemyCount++;
         }
+
+        enemyWave++;
     }
-
-
 }
