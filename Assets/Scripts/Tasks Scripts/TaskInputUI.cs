@@ -9,9 +9,5 @@ public class TaskInputUI : MonoBehaviour
     public void SubmitAnswer()
     {
         TaskManager.Instance.SubmitTask(inputField.text);
-
-        inputField.text = "";
-
-        taskPanel.SetActive(false);
     }
 }

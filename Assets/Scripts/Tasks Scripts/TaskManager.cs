@@ -17,6 +17,8 @@ public class TaskManager : MonoBehaviour
 
     public TextMeshProUGUI moneyText;
 
+   public TextMeshProUGUI feedbackText;
+
 private void Start()
 {
     if (taskPanel != null)
@@ -33,13 +35,13 @@ private void Start()
         Instance = this;
     }
 
-    public void StartTask()
+public void StartTask()
 {
     taskActive = true;
 
-    if (playerController != null)
+    if (feedbackText != null)
     {
-        playerController.canMove = false;
+        feedbackText.text = "";
     }
 
     if (taskPanel != null)
@@ -47,13 +49,16 @@ private void Start()
         taskPanel.SetActive(true);
     }
 
+    Time.timeScale = 0f;
+
     Cursor.lockState = CursorLockMode.None;
     Cursor.visible = true;
 
     Debug.Log("TASK STARTED");
 }
 
-   public void SubmitTask(string playerInput)
+
+public void SubmitTask(string playerInput)
 {
     if (!taskActive)
         return;
@@ -66,26 +71,21 @@ private void Start()
 
         UpdateMoneyUI();
 
-        if (taskPanel != null)
-        {
-            taskPanel.SetActive(false);
-        }
+        taskPanel.SetActive(false);
 
-        if (playerController != null)
-        {
-            playerController.canMove = true;
-        }
+        Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         Debug.Log("TASK COMPLETED!");
-        Debug.Log("Money: $" + playerMoney);
     }
     else
     {
-        Debug.Log("Incorrect text!");
+        feedbackText.text = "Incorrect! Try again.";
+        Debug.Log("Incorrect answer submitted.");
     }
+
 }
 
 private void UpdateMoneyUI()
