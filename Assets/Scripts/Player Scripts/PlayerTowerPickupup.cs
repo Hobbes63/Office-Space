@@ -5,9 +5,10 @@ public class NewMonoBehaviourScript : MonoBehaviour
 {
     public bool isCarrying = false;
     public float pickupRange;
+    public float placementRange;
+
     public Transform carryPoint;
     public MonoBehaviour shootScript;
-
     public Tower heldTower = null;
     void Start()
     {
@@ -21,11 +22,15 @@ public class NewMonoBehaviourScript : MonoBehaviour
         if (Keyboard.current.zKey.isPressed) { Pickup(); }
 
         if (isCarrying) { 
+            //Position carrypoint along ground and send tower there
             DetermineCarryPointPos();
             if (heldTower != null)
             {
                 heldTower.transform.position = carryPoint.position;
             }
+
+            //When R key is pressed, rotate tower by 90 degrees
+            if (Input.GetKeyDown(KeyCode.R)) { RotateTower(); }
 
             //When clicking, place tower at designated position
             if (Mouse.current.leftButton.wasPressedThisFrame) { PlaceTower(); }
@@ -45,15 +50,41 @@ public class NewMonoBehaviourScript : MonoBehaviour
             }
         }
 
+        //set carrying to true
         isCarrying = true;
+
+        //Disable shooting
         shootScript.enabled = false;
+    }
+
+    public void RotateTower()
+    {
+        //rotate held tower 90 degrees
+        heldTower.transform.Rotate(0, 90, 0);
     }
 
     public void PlaceTower()
     {
-        heldTower.SetState(Tower.TowerState.Active);
-        isCarrying = false;
-        shootScript.enabled = true;
+        //TODO: add check for if placement point is within terrain
+
+        //Get the distance from carrypoint and check it is within placement range
+        float placementDistance = Vector3.Distance(this.transform.position, carryPoint.position);
+        if (placementDistance <= placementRange)
+        {
+            //Set tower back to active state
+            heldTower.SetState(Tower.TowerState.Active);
+
+            //set carrying to false
+            isCarrying = false;
+
+            //Enable shooting
+            shootScript.enabled = true;
+        }
+        else
+        {
+            //Replace later with some sort of visual effect
+            Debug.Log("Too far to place tower");
+        }
     }
 
     public void DetermineCarryPointPos()
