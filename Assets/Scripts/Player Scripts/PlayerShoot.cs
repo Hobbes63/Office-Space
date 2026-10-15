@@ -3,6 +3,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerShoot : MonoBehaviour
 {
+    /*To Do List:
+        -allow the projectilePrefab to pull from an array of possible projectiles to make some of the passive items work
+        -
+    */
 
     [Header("Shooting")]
     [SerializeField] private GameObject projectilePrefab;
