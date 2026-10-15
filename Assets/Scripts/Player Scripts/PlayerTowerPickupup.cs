@@ -3,10 +3,12 @@ using UnityEngine.InputSystem;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
+    [Header("Pickup variables")]
     public bool isCarrying = false;
     public float pickupRange;
     public float placementRange;
 
+    [Header("References")]
     public Transform carryPoint;
     public MonoBehaviour shootScript;
     public Tower heldTower = null;
@@ -27,18 +29,19 @@ public class NewMonoBehaviourScript : MonoBehaviour
             if (heldTower != null)
             {
                 heldTower.transform.position = carryPoint.position;
+
+                //When R key is pressed, rotate tower by 90 degrees
+                if (Input.GetKeyDown(KeyCode.R)) { RotateTower(); }
+
+                //When clicking, place tower at designated position
+                if (Mouse.current.leftButton.wasPressedThisFrame) { PlaceTower(); }
             }
-
-            //When R key is pressed, rotate tower by 90 degrees
-            if (Input.GetKeyDown(KeyCode.R)) { RotateTower(); }
-
-            //When clicking, place tower at designated position
-            if (Mouse.current.leftButton.wasPressedThisFrame) { PlaceTower(); }
         }
     }
 
     public void Pickup()
     {
+        //TODO: Change to pick up closest tower instead of first tower the OverlapSphere hits
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, pickupRange);
         foreach (Collider collider in hitColliders)
         {
@@ -103,6 +106,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         {
             Vector3 mouseWorldPosition = ray.GetPoint(distance);
             carryPoint.position = mouseWorldPosition;
+            
         }
     }
 }
