@@ -17,7 +17,7 @@ public class Tower : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         //Check state of tower
         switch (state)
@@ -56,8 +56,8 @@ public class Tower : MonoBehaviour
         return state;
     }
 
-    public void TowerBehavior()
+    public virtual void TowerBehavior()
     {
-        //Will be overwritten by subclasses with specific tower behavior
+        //Will be overrided
     }
 }

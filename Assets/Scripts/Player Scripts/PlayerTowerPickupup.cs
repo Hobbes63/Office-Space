@@ -1,3 +1,4 @@
+using System.Xml.Schema;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +22,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     void Update()
     {
         //When K key is pressed, pick up tower
-        if (Keyboard.current.zKey.isPressed) { Pickup(); }
+        if (Input.GetKeyDown(KeyCode.Z)) { Pickup(); }
 
         if (isCarrying) { 
             //Position carrypoint along ground and send tower there
@@ -41,16 +42,37 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     public void Pickup()
     {
-        //TODO: Change to pick up closest tower instead of first tower the OverlapSphere hits
+        float smallestDistance = float.MaxValue;
+        Tower closestTower = null;
+
+        //Compile all colliders within overlap sphere
         Collider[] hitColliders = Physics.OverlapSphere(this.transform.position, pickupRange);
+
+        //Check distance of all colliders that are towers to player, and determine closest
         foreach (Collider collider in hitColliders)
         {
-            if (collider.gameObject.TryGetComponent(out Tower towerObj))
+            if (collider.gameObject.TryGetComponent(out Tower tower))
             {
-                towerObj.SetState(Tower.TowerState.Carried);
-                heldTower = towerObj;
-                break;
+                //Get distance from player
+                float tempDistance = Vector3.Distance(transform.position, collider.transform.position);
+
+                //Check if smaller than current smallest distance
+                if (tempDistance < smallestDistance)
+                {
+                    smallestDistance = tempDistance;
+                    closestTower = tower;
+                } 
             }
+        }
+
+        //If a closest Tower was found, set to held tower. Otherwise, stop.
+        if (closestTower != null)
+        {
+            closestTower.SetState(Tower.TowerState.Carried);
+            heldTower = closestTower;
+        } else
+        {
+            return;
         }
 
         //set carrying to true
@@ -99,7 +121,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
         // Create a horizontal X/Z plane at the player's Y position
-        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, 0f, 0f));
 
         // Check where the mouse ray hits the plane
         if (groundPlane.Raycast(ray, out float distance))
