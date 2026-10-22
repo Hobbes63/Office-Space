@@ -7,6 +7,8 @@ public class TowerPrinter : Tower
     public GameObject projectilePrefab;
     public Transform firePoint;
 
+    public float projectileSpeed = 10f;
+
     public void Start()
     {
         attackCooldown = 0;
@@ -16,10 +18,26 @@ public class TowerPrinter : Tower
     {
         if (attackCooldown >= maxCooldown)
         {
-            //TODO: Have tower create projectile, also create the prefab for this tower's projectile.
+            // Create projectile
+            GameObject projectile = Instantiate(
+
+                projectilePrefab,
+                firePoint.position,
+                Quaternion.identity
+            );
+
+            // Give projectile velocity
+            Rigidbody rb = projectile.GetComponent<Rigidbody>();
+
+            if (rb != null)
+            {
+
+                rb.linearVelocity = transform.forward * projectileSpeed;
+            }
 
             attackCooldown = 0;
-            Debug.Log("SHOOT");
+            //Debug.Log("SHOOT");
+
         } else
         {
             attackCooldown += Time.deltaTime;
