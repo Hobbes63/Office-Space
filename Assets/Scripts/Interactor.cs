@@ -15,11 +15,15 @@ public class Interactor : MonoBehaviour
         
     }
 
+    [SerializeField] private Transform interactorSource;
+    [SerializeField] private float interactRange = 3f;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private LayerMask interactableLayer;
     private void Update()
     {
         Debug.DrawRay(
-            interactorSource.position,
-            interactorSource.forward * interactRange,
+            InteractorSource.position,
+            InteractorSource.forward * InteractRange,
             Color.green
         );
 
@@ -27,14 +31,14 @@ public class Interactor : MonoBehaviour
             return;
 
         Ray ray = new Ray(
-            interactorSource.position,
-            interactorSource.forward
+            InteractorSource.position,
+            InteractorSource.forward
         );
 
         if (Physics.Raycast(
             ray,
             out RaycastHit hit,
-            interactRange,
+            InteractRange,
             interactableLayer))
         {
             IInteractable interactable =
