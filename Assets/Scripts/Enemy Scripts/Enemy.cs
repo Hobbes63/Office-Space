@@ -5,7 +5,6 @@ using System.IO;
 
 public class Enemy : MonoBehaviour
 {
-    /*To Do List:*/
     [Header("< - - - - For Patrol Behavior - - - >")]
     public Transform[] Waypoints;
     public int curWaypoint = 0;

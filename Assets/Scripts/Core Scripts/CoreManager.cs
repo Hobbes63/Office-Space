@@ -4,18 +4,6 @@ using TMPro;
 
 public class CoreManager : MonoBehaviour, IInteractable 
 {
-    /*To Do List:
-    Needs to be made interactable with the player:
-        -Add Prompt to interact
-        -Should bring up a pop up UI with a few options:
-            -"Order Towers"
-            -"Check Stash (the inventory)"
-            -"Type up emails" (default task that is always optional for the player to earn some money, how it will work will be explained in another area/script)
-            -"..."
-        -Can be repairable if players have a "Toolkit" item
-        -[Functions from the pop up]"Clock in" (to start the day)/"Clock out" (to go to lunch)
-        -Could also be how players pause?
-    */
     public float coreCurrentHP;
     public float coreMaxHP;
 
@@ -29,11 +17,7 @@ public class CoreManager : MonoBehaviour, IInteractable
     public enum Abilities { NoBoost, RegenBoost, SpeedBoost, FireRateBoost };
 
     public Abilities coreAttributes = Abilities.NoBoost;
-    // Start is called once before the first execution of Update after the
-    //  MonoBehaviour is created
-
-    public GameObject taskPanel;
-
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
@@ -98,16 +82,10 @@ public class CoreManager : MonoBehaviour, IInteractable
         }
     }
 
-public void Interact()
-{
-    Debug.Log("Core Interacted!");
-
-    if (TaskManager.Instance != null)
+    public void Interact()
     {
-        TaskManager.Instance.StartTask();
+        
     }
-}
-
 
     public void BoostPlayerRegen()
     {
