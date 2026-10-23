@@ -16,7 +16,7 @@ public class Interactor : MonoBehaviour
     void Update() //retooled to use overlapshere instead of raycast, detects all collisions around player instead of just in a specific direction
     {
         if(Input.GetKeyDown(KeyCode.E)) {
-            Collider[] hitColliders = Physics.OverlapSphere(interactorSource.position, interactRange);
+            Collider[] hitColliders = Physics.OverlapSphere(InteractorSource.position, InteractRange);
             foreach(Collider collider in hitColliders)
             {
                 if(collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
