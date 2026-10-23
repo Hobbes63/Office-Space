@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public interface IInteractable
+interface IInteractable
 {
-    void Interact();
+    public void Interact();
 }
 
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] private Transform interactorSource;
-    [SerializeField] private float interactRange = 3f;
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private LayerMask interactableLayer;
+    public Transform InteractorSource;
+    public float InteractRange;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+    }
 
     // Update is called once per frame
     void Update() //retooled to use overlapshere instead of raycast, detects all collisions around player instead of just in a specific direction

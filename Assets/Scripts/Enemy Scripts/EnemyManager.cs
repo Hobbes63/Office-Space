@@ -3,33 +3,42 @@ using System.Collections.Generic;
 
 public class EnemyManager : MonoBehaviour
 {
-    [SerializeField] private GameObject enemiesPrefab;
+    [SerializeField] GameObject enemiesPrefab;
+
+    int enemyCount;
+    int enemyCountCap;
+    int enemyMaxCapacity;
+    int enemyWave;
+
+
+    int enemiesDefeated;
     [SerializeField] public List<Transform> Spawnpoints;
+    int currSpawnPoint;
 
-    public int enemyCount;
-    public int enemyWave = 1;
-
-    private int enemyCountCap = 15;
-
-    public void SpawnWave()
+    void Start()
     {
-        int enemiesToSpawn = enemyWave * 3;
+        enemyCountCap = 15;
+    }
 
-        Debug.Log($"Spawning Wave {enemyWave}");
+    void Update()
+    {
+        spawnEnemy();
+    }
 
-        for (int i = 0; i < enemiesToSpawn; i++)
+    public void spawnEnemy()
+    {
+        if(enemyCount < enemyCountCap)
         {
-            int spawnIndex = Random.Range(0, Spawnpoints.Count);
-
-            Instantiate(
+            currSpawnPoint = Random.Range(0, 3);
+            GameObject newEnemy = Instantiate(
                 enemiesPrefab,
-                Spawnpoints[spawnIndex].position,
+                Spawnpoints[currSpawnPoint].transform.position,
                 Quaternion.identity
             );
-
+            
             enemyCount++;
         }
-
-        enemyWave++;
     }
+
+
 }

@@ -7,11 +7,6 @@ using System;
 
 public class Inventory : MonoBehaviour
 {
-    /*To Do List:
-        -
-        -
-    */
-
     public bool showingInventory;
 
     public string menuName;
@@ -47,7 +42,7 @@ public class Inventory : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I)) //Change this to a variable that can be changed later
+        if (Input.GetKeyDown(KeyCode.I))
         {
             showingInventory = (showingInventory) ? true : false; //Instead make it so the items can be made larger and hoverable with their info
         }
