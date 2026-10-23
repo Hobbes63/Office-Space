@@ -92,7 +92,7 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void Regenerate()
+    void Regenerate()
     {
         currentHealth += regenAmount;
 
@@ -105,7 +105,7 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Player regenerated " + regenAmount + " health. Current health: " + currentHealth);
     }
 
-    public void UpdateHealthDisplay()
+    void UpdateHealthDisplay()
     {
         health.text = "Health " + currentHealth;
     }

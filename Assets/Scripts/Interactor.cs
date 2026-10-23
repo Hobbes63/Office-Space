@@ -12,25 +12,32 @@ public class Interactor : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.E;
     [SerializeField] private LayerMask interactableLayer;
 
-    // Update is called once per frame
-    void Update() //retooled to use overlapshere instead of raycast, detects all collisions around player instead of just in a specific direction
+    private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.E)) {
-            Collider[] hitColliders = Physics.OverlapSphere(InteractorSource.position, InteractRange);
-            foreach(Collider collider in hitColliders)
-            {
-                if(collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
-                    interactObj.Interact();
-                    return;
-                }
-            }
-            /*
-            if(Physics.Raycast(r, out RaycastHit hitInfo, InteractRange)) {
-                if(hitInfo.collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
-                    interactObj.Interact();
-                }
-            }
-            */
+        Debug.DrawRay(
+            interactorSource.position,
+            interactorSource.forward * interactRange,
+            Color.green
+        );
+
+        if (!Input.GetKeyDown(interactKey))
+            return;
+
+        Ray ray = new Ray(
+            interactorSource.position,
+            interactorSource.forward
+        );
+
+        if (Physics.Raycast(
+            ray,
+            out RaycastHit hit,
+            interactRange,
+            interactableLayer))
+        {
+            IInteractable interactable =
+                hit.collider.GetComponentInParent<IInteractable>();
+
+            interactable?.Interact();
         }
     }
 }
