@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Item
 {
+    /*To Do List:
+        -List out the item types and their functionalities here:
+            -
+        
+        -Create a tag system for if those items affect the player, the core cubicle, or the towers? (Optional, requires discussion)
+    */
     public string type; //Helps in identifying what stat to change
 
     public string name;

@@ -1,19 +1,16 @@
 using UnityEngine;
 
-interface IInteractable
+public interface IInteractable
 {
-    public void Interact();
+    void Interact();
 }
 
 public class Interactor : MonoBehaviour
 {
-    public Transform InteractorSource;
-    public float InteractRange;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Transform interactorSource;
+    [SerializeField] private float interactRange = 3f;
+    [SerializeField] private KeyCode interactKey = KeyCode.E;
+    [SerializeField] private LayerMask interactableLayer;
 
     [SerializeField] private Transform interactorSource;
     [SerializeField] private float interactRange = 3f;
