@@ -4518,6 +4518,8 @@ MonoBehaviour:
   playerController: {fileID: 1182888666}
   moneyText: {fileID: 213269221}
   feedbackText: {fileID: 1919139418}
+  officeTimeManager: {fileID: 355105634}
+  taskInputField: {fileID: 1827680091}
 --- !u!1001 &1360110817
 PrefabInstance:
   m_ObjectHideFlags: 0

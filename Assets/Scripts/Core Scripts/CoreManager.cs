@@ -102,11 +102,6 @@ public void Interact()
 {
     Debug.Log("Core Interacted!");
 
-    if (taskPanel != null)
-    {
-        taskPanel.SetActive(true);
-    }
-
     if (TaskManager.Instance != null)
     {
         TaskManager.Instance.StartTask();
