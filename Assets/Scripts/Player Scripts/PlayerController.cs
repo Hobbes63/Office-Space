@@ -4,9 +4,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    /*To Do List:
-        
-    */
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     public float speed;
@@ -15,8 +12,6 @@ public class PlayerController : MonoBehaviour
     public LayerMask terrainLayer;
     public Rigidbody rb;
     public SpriteRenderer sr;
-
-    public bool canMove = true;
 
     void Start()
     {
@@ -27,11 +22,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (!canMove)
-        {
-        return;
-        }
 
         float x = 0f;
         float y = 0f;
