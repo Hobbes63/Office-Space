@@ -19,6 +19,16 @@ public class TaskManager : MonoBehaviour
 
    public TextMeshProUGUI feedbackText;
 
+   public OfficeTimeManager officeTimeManager;
+
+    private int lastCompletedHour = -1; 
+
+    public TMP_InputField taskInputField;
+    public bool IsTaskActive()
+{
+    return taskActive;
+}
+
 private void Start()
 {
     if (taskPanel != null)
@@ -37,6 +47,21 @@ private void Start()
 
 public void StartTask()
 {
+    int currentHour = officeTimeManager.GetCurrentHour();
+
+    // Already completed this hour
+    if (lastCompletedHour == currentHour)
+    {
+        Debug.Log("Task already completed this hour!");
+
+        if (feedbackText != null)
+        {
+            feedbackText.text = "Come back next hour for more work!";
+        }
+
+        return;
+    }
+
     taskActive = true;
 
     if (feedbackText != null)
@@ -57,29 +82,35 @@ public void StartTask()
     Debug.Log("TASK STARTED");
 }
 
-
 public void SubmitTask(string playerInput)
 {
     if (!taskActive)
         return;
 
-    if (playerInput.ToLower() == requiredText.ToLower())
+if (playerInput.Trim().ToLower() == requiredText.Trim().ToLower())
+{
+    taskActive = false;
+
+    playerMoney += rewardMoney;
+
+    lastCompletedHour = officeTimeManager.GetCurrentHour();
+
+    UpdateMoneyUI();
+
+    if (taskInputField != null)
     {
-        taskActive = false;
-
-        playerMoney += rewardMoney;
-
-        UpdateMoneyUI();
-
-        taskPanel.SetActive(false);
-
-        Time.timeScale = 1f;
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        Debug.Log("TASK COMPLETED!");
+        taskInputField.text = "";
     }
+
+    taskPanel.SetActive(false);
+
+    Time.timeScale = 1f;
+
+    Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
+
+    Debug.Log("TASK COMPLETED!");
+}
     else
     {
         feedbackText.text = "Incorrect! Try again.";

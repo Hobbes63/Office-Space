@@ -13,15 +13,19 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private float projectileSpeed = 10f;
 
-    private void Update()
+  private void Update()
+{
+    if (TaskManager.Instance != null &&
+        TaskManager.Instance.IsTaskActive())
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-
-            Shoot();
-        }
+        return;
     }
 
+    if (Mouse.current.leftButton.wasPressedThisFrame)
+    {
+        Shoot();
+    }
+}
     private void Shoot()
     {
 

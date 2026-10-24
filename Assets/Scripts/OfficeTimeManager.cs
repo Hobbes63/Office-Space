@@ -19,6 +19,11 @@ public class OfficeTimeManager : MonoBehaviour
 
     public EnemyManager enemyManager;
 
+    public int GetCurrentHour()
+{
+    return currentHour;
+}
+
 
     private void Start()
     {
