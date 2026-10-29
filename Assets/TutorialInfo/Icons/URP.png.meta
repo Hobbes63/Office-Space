@@ -42,7 +42,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -53,7 +53,11 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
+<<<<<<< Updated upstream:Assets/TutorialInfo/Icons/URP.png.meta
   textureType: 2
+=======
+  textureType: 8
+>>>>>>> Stashed changes:Assets/Materials/Sprites/Heal_Ducktape_64x64.png.meta
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -118,7 +122,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
