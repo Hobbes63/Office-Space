@@ -21,8 +21,6 @@ public class PlayerManager : MonoBehaviour
     public float currentHealth = 100.0f;
     public float maximumHealth = 100.0f;
 
-    public int playerDamage;
-
     public float baseSpeed = 3.0f; //adjust this to read from player controller
 
     //Player Regen Controls
@@ -106,12 +104,10 @@ public class PlayerManager : MonoBehaviour
         UpdateHealthDisplay();
         Debug.Log("Player regenerated " + regenAmount + " health. Current health: " + currentHealth);
     }
-    public void UpdateHealthDisplay()
+
+    void UpdateHealthDisplay()
     {
-        health.text = "Health " +
-                    currentHealth +
-                    "/" +
-                    maximumHealth;
+        health.text = "Health " + currentHealth;
     }
 
     public void TakeDamage(float damage)
