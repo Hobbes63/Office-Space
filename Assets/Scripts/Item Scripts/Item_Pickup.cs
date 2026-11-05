@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class Item_Pickup : MonoBehaviour
@@ -12,6 +13,14 @@ public class Item_Pickup : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
+        PlayerManager player = other.GetComponent<PlayerManager>();
+
+        if (player == null)
+        {
+            Debug.LogWarning("PlayerManager not found!");
+            return;
+        }
+
         Item item = new Item();
 
         item.name = itemName;
@@ -20,39 +29,48 @@ public class Item_Pickup : MonoBehaviour
         item.itemCount = 1;
         item.itemSprite = itemSprite;
 
-        PlayerManager player =
-            other.GetComponent<PlayerManager>();
-
         player.playerInventory.AddToInventory(item);
 
         ApplyItemEffect(player, item);
 
         Destroy(gameObject);
     }
-private void ApplyItemEffect(PlayerManager player, Item item)
-{
-    switch (item.type)
+
+    private void ApplyItemEffect(PlayerManager player, Item item)
     {
-        case ItemType.Health:
+        switch (item.type)
+        {
+            case ItemType.Health:
 
-            player.maximumHealth += item.potency;
-            player.currentHealth += item.potency;
+                player.maximumHealth += item.potency;
+                player.currentHealth += item.potency;
+                player.UpdateHealthDisplay();
 
-            player.UpdateHealthDisplay();
+                break;
 
-            break;
+            case ItemType.Damage:
 
-        case ItemType.Damage:
+                player.playerDamage += item.potency;
 
-            player.playerDamage += item.potency;
+                break;
 
-            break;
+            case ItemType.Speed:
 
-        case ItemType.Speed:
+                player.baseSpeed += item.potency;
 
-            player.baseSpeed += item.potency;
+                break;
 
-            break;
+            case ItemType.FireRate:
+
+                // Add your fire rate variable here.
+                break;
+
+            case ItemType.CoreHealth:
+
+                // Add your core health variable here.
+                break;
+        }
+
+        Debug.Log($"{item.name} collected!");
     }
-}
 }
