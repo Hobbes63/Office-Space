@@ -6,6 +6,8 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private GameObject enemiesPrefab;
     [SerializeField] public List<Transform> Spawnpoints;
 
+    [SerializeField] private List<GameObject> spawnWarningLights;
+
     public int enemyCount;
     public int enemyWave = 1;
 
@@ -32,4 +34,15 @@ public class EnemyManager : MonoBehaviour
 
         enemyWave++;
     }
+    public List<GameObject> spawnIndicators;
+
+   public void ShowSpawnWarning(int spawnIndex)
+{
+    foreach(GameObject lightObj in spawnWarningLights)
+    {
+        lightObj.SetActive(false);
+    }
+
+    spawnWarningLights[spawnIndex].SetActive(true);
+}
 }

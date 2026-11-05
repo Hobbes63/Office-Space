@@ -1,8 +1,11 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     public float speed;
     public float groundDist;
 
@@ -10,45 +13,47 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     public SpriteRenderer sr;
 
-    public bool canMove = true;
-
-    private Vector3 moveDir;
-
     void Start()
     {
         speed = GetComponent<PlayerManager>().baseSpeed;
-        rb = GetComponent<Rigidbody>();
+        rb = gameObject.GetComponent<Rigidbody>();
     }
 
+    // Update is called once per frame
     void Update()
     {
-        if (!canMove)
-        {
-            moveDir = Vector3.zero;
-            return;
-        }
 
         float x = 0f;
         float y = 0f;
 
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
-                x = 1f;
+            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x = 1f;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x = -1f;
 
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
-                x = -1f;
-
-            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed)
-                y = 1f;
-
-            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed)
-                y = -1f;
+            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y = 1f;
+            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y = -1f;
         }
 
-        moveDir = new Vector3(x, 0f, y).normalized;
+        Vector3 moveDir = new Vector3(x, 0, y).normalized;
 
-        // Sprite flipping
+        transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
+
+        RaycastHit hit;
+        Vector3 castPos = transform.position;
+        castPos.y += 1;
+
+        if (Physics.Raycast(castPos, -transform.up, out hit, Mathf.Infinity, terrainLayer))
+        {
+            if (hit.collider != null)
+            {
+                Vector3 movePos = transform.position;
+                movePos.y = hit.point.y + groundDist;
+                transform.position = movePos;
+            }
+        }
+
+        // Handle Sprite Flipping
         if (x < 0)
         {
             sr.flipX = true;
@@ -56,31 +61,6 @@ public class PlayerController : MonoBehaviour
         else if (x > 0)
         {
             sr.flipX = false;
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (!canMove)
-            return;
-
-        Vector3 newPosition =
-            rb.position +
-            moveDir * speed * Time.fixedDeltaTime;
-
-        rb.MovePosition(newPosition);
-
-        // Ground snapping
-        RaycastHit hit;
-        Vector3 castPos = rb.position;
-        castPos.y += 1f;
-
-        if (Physics.Raycast(castPos, Vector3.down, out hit, Mathf.Infinity, terrainLayer))
-        {
-            Vector3 correctedPosition = rb.position;
-            correctedPosition.y = hit.point.y + groundDist;
-
-            rb.position = correctedPosition;
         }
     }
 }

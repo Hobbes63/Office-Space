@@ -53,13 +53,20 @@ public class PauseManager : MonoBehaviour
     }
 
     public void RestartGame()
-    {
-        Time.timeScale = 1f;
+{
+    Time.timeScale = 1f;
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
-    }
+    isPaused = false;
+
+    pausePanel.SetActive(false);
+
+    Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
+
+    SceneManager.LoadScene(
+        SceneManager.GetActiveScene().name
+    );
+}
 
     public void QuitGame()
     {
