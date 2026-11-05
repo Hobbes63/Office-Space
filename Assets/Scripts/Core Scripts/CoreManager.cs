@@ -34,6 +34,9 @@ public class CoreManager : MonoBehaviour, IInteractable
 
     public GameObject taskPanel;
 
+    private bool playerInsideCore = false;
+
+
     void Start()
     {
 
@@ -80,14 +83,26 @@ public class CoreManager : MonoBehaviour, IInteractable
     }
 
     private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("Player"))
     {
-
-        if (other.CompareTag("Enemy"))
-        {
-
-            TakeDamage(enemyDamage);      
-        }
+        playerInsideCore = true;
     }
+
+    if (other.CompareTag("Enemy"))
+    {
+        TakeDamage(enemyDamage);
+    }
+}
+
+private void OnTriggerExit(Collider other)
+{
+    if (other.CompareTag("Player"))
+    {
+        playerInsideCore = false;
+    }
+}
+
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -100,6 +115,12 @@ public class CoreManager : MonoBehaviour, IInteractable
 
 public void Interact()
 {
+    if (!playerInsideCore)
+    {
+        Debug.Log("You must be inside the Core to use it!");
+        return;
+    }
+
     Debug.Log("Core Interacted!");
 
     if (TaskManager.Instance != null)
@@ -107,7 +128,6 @@ public void Interact()
         TaskManager.Instance.StartTask();
     }
 }
-
 
     public void BoostPlayerRegen()
     {

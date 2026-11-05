@@ -26,22 +26,31 @@ public void RefreshInventoryUI()
 
     foreach (Item item in playerInventory)
     {
-     GameObject icon =
-    Instantiate(iconPrefab, iconParent);
+        GameObject icon =
+            Instantiate(iconPrefab, iconParent);
 
-InventoryIconUI iconUI =
-    icon.GetComponent<InventoryIconUI>();
+       InventoryIconUI iconUI =
+    icon.GetComponentInChildren<InventoryIconUI>();
 
-iconUI.iconImage.sprite = item.itemSprite;
+        if (iconUI == null)
+        {
+            Debug.LogError("InventoryIconUI component missing on prefab!");
+            continue;
+        }
 
-iconUI.countText.text =
-    item.itemCount > 1
-        ? "x" + item.itemCount
-        : "";
-    
+        iconUI.iconImage.sprite = item.itemSprite;
+        iconUI.iconImage.color = Color.white;
+
+        if (item.itemCount > 1)
+        {
+            iconUI.countText.text = "x" + item.itemCount;
+        }
+        else
+        {
+            iconUI.countText.text = "";
+        }
     }
 }
-
 
     public void AddToInventory(Item item)
     {

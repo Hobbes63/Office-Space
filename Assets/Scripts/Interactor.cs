@@ -1,43 +1,26 @@
 using UnityEngine;
 
-public interface IInteractable
+interface IInteractable
 {
-    void Interact();
+    public void Interact();
 }
 
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] private Transform interactorSource;
-    [SerializeField] private float interactRange = 3f;
-    [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private LayerMask interactableLayer;
-
-    private void Update()
+    public Transform InteractorSource;
+    public float InteractRange;
+    
+    void Update()
     {
-        Debug.DrawRay(
-            interactorSource.position,
-            interactorSource.forward * interactRange,
-            Color.green
-        );
-
-        if (!Input.GetKeyDown(interactKey))
-            return;
-
-        Ray ray = new Ray(
-            interactorSource.position,
-            interactorSource.forward
-        );
-
-        if (Physics.Raycast(
-            ray,
-            out RaycastHit hit,
-            interactRange,
-            interactableLayer))
-        {
-            IInteractable interactable =
-                hit.collider.GetComponentInParent<IInteractable>();
-
-            interactable?.Interact();
+        if(Input.GetKeyDown(KeyCode.E)) {
+            Collider[] hitColliders = Physics.OverlapSphere(InteractorSource.position, InteractRange);
+            foreach(Collider collider in hitColliders)
+            {
+                if(collider.gameObject.TryGetComponent(out IInteractable interactObj)) {
+                    interactObj.Interact();
+                    return;
+                }
+            }
         }
     }
 }

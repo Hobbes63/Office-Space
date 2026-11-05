@@ -9,6 +9,8 @@ public class Tower : MonoBehaviour
     [Header("Tower variables")]
     public TowerState state;
 
+    public int price;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -53,7 +55,9 @@ public class Tower : MonoBehaviour
 
     public TowerState GetState()
     {
+        
         return state;
+        
     }
 
     public virtual void TowerBehavior()
