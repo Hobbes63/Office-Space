@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Inventory : MonoBehaviour
 [SerializeField] private Transform iconParent;
 [SerializeField] private GameObject iconPrefab;
 
-  public void RefreshInventoryUI()
+public void RefreshInventoryUI()
 {
     foreach (Transform child in iconParent)
     {
@@ -25,15 +26,22 @@ public class Inventory : MonoBehaviour
 
     foreach (Item item in playerInventory)
     {
-        GameObject icon =
-            Instantiate(iconPrefab, iconParent);
+     GameObject icon =
+    Instantiate(iconPrefab, iconParent);
 
-        Image image =
-            icon.GetComponent<Image>();
+InventoryIconUI iconUI =
+    icon.GetComponent<InventoryIconUI>();
 
-        image.sprite = item.itemSprite;
+iconUI.iconImage.sprite = item.itemSprite;
+
+iconUI.countText.text =
+    item.itemCount > 1
+        ? "x" + item.itemCount
+        : "";
+    
     }
 }
+
 
     public void AddToInventory(Item item)
     {
@@ -42,21 +50,21 @@ public class Inventory : MonoBehaviour
             Debug.LogError("Tried to add a null item!");
             return;
         }
+foreach (Item inventoryItem in playerInventory)
+{
+    if (inventoryItem.name == item.name)
+    {
+        inventoryItem.itemCount++;
 
-        // Check if item already exists
-        foreach (Item inventoryItem in playerInventory)
-        {
-            if (inventoryItem.name == item.name)
-            {
-                inventoryItem.itemCount++;
-                Debug.Log($"Added another {item.name}");
+        Debug.Log($"Added another {item.name}");
 
-                PlayPickupSound();
+        PlayPickupSound();
 
-                RefreshInventoryUI();
-                return;
-            }
-        }
+        RefreshInventoryUI();
+
+        return;
+    }
+}
 
         // Add as a new item
         if (playerInventory.Count < inventorySize)
