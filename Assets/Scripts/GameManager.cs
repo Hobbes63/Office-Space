@@ -1,47 +1,73 @@
 using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    /*To Do List: 
-    Needs to control how time will scale in game (not just literal run-time, but also in game time and how it's represented)
-        -Need to establish the real time to game time ratio (i.e. 5 seconds equates to 5 minutes in game?)
+    public static GameManager Instance;
 
-    Needs to evaluate how difficulty scaling/enemy scaling will work since we have fixed(?) time chunks
+    [Header("References")]
+    public CoreManager coreManager;
 
-    Needs to control item spawn rate, item spawn conditions...
+    [Header("UI")]
+    public GameObject gameOverPanel;
 
-    Needs to control flags for tasks/task completion, available task list, and reward/reward scaling for those tasks.
-    */
+    private bool gameOver = false;
 
-    int waveCount;
-    int roundCount;
-
-    float runTimer; //Shows true run-time of player run
-    float dayTimer; //Shows simulated time for in-game clock
-
-    int taskCount; //Can be updated/increased with later waves
-
-    int playerMoneyCount;
-    
-
-    public List<KeyValuePair<string, string>> Tasks;
-
-    void Awake()
+    private void Awake()
     {
-        
-    }
-    void Start()
-    {
-        
+        Instance = this;
     }
 
-    void Update()
+    private void Start()
     {
-        
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
     }
-    void GiveTask()
+
+    private void Update()
     {
-        
+        if (gameOver)
+            return;
+
+        if (coreManager != null &&
+            coreManager.coreCurrentHP <= 0)
+        {
+            GameOver();
+        }
+    }
+
+    public void GameOver()
+    {
+        gameOver = true;
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+        }
+
+        Debug.Log("GAME OVER");
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
+    }
+
+    public void QuitGame()
+    {
+        Time.timeScale = 1f;
+
+        Application.Quit();
     }
 }
