@@ -1,91 +1,89 @@
+
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using System;
 using System.Collections.Generic;
 
 public class PlayerManager : MonoBehaviour
 {
-    /*To Do List:
-        Enable a way for the player to die, respawn
-    */
+    [Header("Interaction")]
     public Camera mainCamera;
     public float interactionDistance = 2f;
-
     public GameObject interactionUI;
     public TextMeshProUGUI interactionText;
 
-    //Player Health Values
-    TextMeshProUGUI health;
-    public float currentHealth = 100.0f;
-    public float maximumHealth = 100.0f;
+    [Header("Player Health")]
+    [SerializeField] private TextMeshProUGUI health;
 
+    public float currentHealth = 100f;
+    public float maximumHealth = 100f;
+
+    [Header("Player Stats")]
     public int playerDamage;
-
-    public float baseSpeed = 3.0f; //adjust this to read from player controller
-
-    //Player Regen Controls
-    private float lastHitTime = 0f;
-    private float regenDelay = 10f;
-    private float regenAmount = 0.1f;
-    private float regenRate = 5f; // Regenerate every 1 second
-    private float nextRegenTime = 0f;
-
+    public float baseSpeed = 3f;
     public int playerLives;
 
+    [Header("Inventory")]
+    public Inventory playerInventory;
+
+    [Header("Health Regeneration")]
+    [SerializeField] private float regenDelay = 10f;
+    [SerializeField] private float regenAmount = 0.1f;
+    [SerializeField] private float regenRate = 5f;
+
+    private float lastHitTime;
+    private float nextRegenTime;
 
     public List<KeyValuePair<string, int>> Stats;
 
-    // AudioManager audioManager;
-
-    // [Header(-------------Footsteps-------------)]
-    // [SerializeField] public AudioClip[] footstepSounds;
-
-    // private AudioSource sfxSource;
-
-    // [Header(-------------HP and Item pick-up-------------)]
-    // [SerializeField] public AudioClip playerHurt;
-    // [SerializeField] public AudioClip playerHeal;
-    // [SerializeField] public AudioClip playerLifeUp;
-    // [SerializeField] public AudioClip playerDeath;
-
-    // private AudioSource playerHurtSource;
-    // private AudioSource playerHealSource;
-    // private AudioSource playerLifeUpSource;
-    // private AudioSource playerDeathSource;
-
-    public Inventory playerInventory;
-
-    private void Awake()
+    private void Start()
     {
-        //audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
-    }
+        if (health == null)
+        {
+            GameObject healthObject =
+                GameObject.FindGameObjectWithTag("healthText");
 
-    void Start()
-    {
-        health = GameObject.FindGameObjectWithTag("healthText").GetComponent<TextMeshProUGUI>();
+            if (healthObject != null)
+                health = healthObject.GetComponent<TextMeshProUGUI>();
+        }
+
+        currentHealth = Mathf.Clamp(
+            currentHealth, 0, maximumHealth
+        );
+
         UpdateHealthDisplay();
+
         lastHitTime = Time.time;
-
-
 
         Stats = new List<KeyValuePair<string, int>>
         {
-            new KeyValuePair<string, int>("Speed", Mathf.RoundToInt(baseSpeed)),
-            new KeyValuePair<string, int>("Health", Mathf.RoundToInt(currentHealth)),
-            //new KeyValuePair<string, int>("Shield", shield),
-            new KeyValuePair<string, int>("Lives", playerLives)
+            new KeyValuePair<string, int>(
+                "Speed", Mathf.RoundToInt(baseSpeed)
+            ),
 
+            new KeyValuePair<string, int>(
+                "Health", Mathf.RoundToInt(currentHealth)
+            ),
+
+            new KeyValuePair<string, int>(
+                "Lives", playerLives
+            )
         };
     }
 
-    void Update()
+    private void Awake()
+{
+    if (playerInventory == null)
     {
-        // Check if enough time has passed since last hit
-        if (currentHealth < maximumHealth && Time.time > lastHitTime + regenDelay)
+        playerInventory = GetComponent<Inventory>();
+    }
+}
+
+    private void Update()
+    {
+        if (currentHealth < maximumHealth &&
+            Time.time >= lastHitTime + regenDelay)
         {
-            // Check if it's time to regenerate
             if (Time.time >= nextRegenTime)
             {
                 Regenerate();
@@ -94,67 +92,78 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    void Regenerate()
+    private void Regenerate()
     {
         currentHealth += regenAmount;
 
-        if (currentHealth > maximumHealth)
-        {
-            currentHealth = maximumHealth;
-        }
+        currentHealth = Mathf.Min(
+            currentHealth, maximumHealth
+        );
 
         UpdateHealthDisplay();
-        Debug.Log("Player regenerated " + regenAmount + " health. Current health: " + currentHealth);
     }
+
     public void UpdateHealthDisplay()
     {
+        if (health == null)
+            return;
+
         health.text = "Health " +
-                    currentHealth +
-                    "/" +
-                    maximumHealth;
+                      currentHealth.ToString("F0") +
+                      "/" +
+                      maximumHealth.ToString("F0");
     }
 
     public void TakeDamage(float damage)
     {
+        if (currentHealth <= 0)
+            return;
+
         currentHealth -= damage;
-        lastHitTime = Time.time; // Reset timer when taking damage
+
+        currentHealth = Mathf.Max(0, currentHealth);
+
+        lastHitTime = Time.time;
+
+        UpdateHealthDisplay();
 
         if (currentHealth <= 0)
         {
-            currentHealth = 0;
             Die();
         }
+    }
+
+    public void Heal(float amount)
+    {
+        currentHealth = Mathf.Min(
+            currentHealth + amount,
+            maximumHealth
+        );
 
         UpdateHealthDisplay();
     }
 
-    void Die()
+    private void Die()
     {
         Debug.Log("Player has died!");
+
         SceneManager.LoadScene(0);
-        // Add death logic here (reload scene, game over screen, etc.)
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Only take damage from projectiles/enemies, not the ground!
         if (other.CompareTag("Enemy"))
         {
-            currentHealth -= 20;
-            lastHitTime = Time.time;
-            UpdateHealthDisplay();
+            TakeDamage(20f);
             Destroy(other.gameObject);
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Reset timer if player collides with enemy
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            currentHealth -= 20;
-            lastHitTime = Time.time;
-            UpdateHealthDisplay();
+            TakeDamage(20f);
         }
     }
 }

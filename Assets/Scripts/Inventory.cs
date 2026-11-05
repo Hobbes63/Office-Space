@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
-using TMPro;
 
 public class Inventory : MonoBehaviour
 {
@@ -14,93 +12,96 @@ public class Inventory : MonoBehaviour
     [SerializeField] private AudioClip itemPickUp;
 
     [Header("Inventory UI")]
-[SerializeField] private Transform iconParent;
-[SerializeField] private GameObject iconPrefab;
+    [SerializeField] private Transform iconParent;
+    [SerializeField] private GameObject iconPrefab;
 
-public void RefreshInventoryUI()
-{
-    foreach (Transform child in iconParent)
+    public void RefreshInventoryUI()
     {
-        Destroy(child.gameObject);
+        if (iconParent == null || iconPrefab == null)
+        {
+            Debug.LogWarning("Inventory UI references missing!");
+            return;
+        }
+
+        foreach (Transform child in iconParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Item item in playerInventory)
+        {
+            GameObject icon = Instantiate(iconPrefab, iconParent);
+
+            InventoryIconUI iconUI =
+                icon.GetComponentInChildren<InventoryIconUI>();
+
+            if (iconUI == null)
+            {
+                Debug.LogError("InventoryIconUI missing!");
+                continue;
+            }
+
+            iconUI.iconImage.sprite = item.itemSprite;
+            iconUI.iconImage.color = Color.white;
+
+            iconUI.countText.text =
+                item.itemCount > 1 ? "x" + item.itemCount : "";
+        }
     }
 
-    foreach (Item item in playerInventory)
-    {
-        GameObject icon =
-            Instantiate(iconPrefab, iconParent);
-
-       InventoryIconUI iconUI =
-    icon.GetComponentInChildren<InventoryIconUI>();
-
-        if (iconUI == null)
-        {
-            Debug.LogError("InventoryIconUI component missing on prefab!");
-            continue;
-        }
-
-        iconUI.iconImage.sprite = item.itemSprite;
-        iconUI.iconImage.color = Color.white;
-
-        if (item.itemCount > 1)
-        {
-            iconUI.countText.text = "x" + item.itemCount;
-        }
-        else
-        {
-            iconUI.countText.text = "";
-        }
-    }
-}
-
-    public void AddToInventory(Item item)
+    public bool AddToInventory(Item item)
     {
         if (item == null)
         {
-            Debug.LogError("Tried to add a null item!");
-            return;
+            Debug.LogError("Cannot add a null item!");
+            return false;
         }
-foreach (Item inventoryItem in playerInventory)
-{
-    if (inventoryItem.name == item.name)
-    {
-        inventoryItem.itemCount++;
 
-        Debug.Log($"Added another {item.name}");
-
-        PlayPickupSound();
-
-        RefreshInventoryUI();
-
-        return;
-    }
-}
-
-        // Add as a new item
-        if (playerInventory.Count < inventorySize)
+        // Check for an existing matching item
+        foreach (Item inventoryItem in playerInventory)
         {
-            item.itemCount = 1;
-            playerInventory.Add(item);
+            if (inventoryItem.name == item.name &&
+                inventoryItem.type == item.type)
+            {
+                inventoryItem.itemCount++;
 
-            Debug.Log($"Added {item.name}");
+                Debug.Log($"Stacked {item.name}");
 
-            PlayPickupSound();
-            
-            RefreshInventoryUI();
+                PlayPickupSound();
+                RefreshInventoryUI();
+
+                return true;
+            }
         }
-        else
+
+        // Check inventory capacity
+        if (playerInventory.Count >= inventorySize)
         {
             Debug.Log("Inventory Full!");
+            return false;
         }
+
+        // Add new item
+        item.itemCount = 1;
+        playerInventory.Add(item);
+
+        Debug.Log($"Added {item.name}");
+
+        PlayPickupSound();
+        RefreshInventoryUI();
+
+        return true;
     }
 
     public void RemoveFromInventory(Item item)
     {
-        if(item == null)
+        if (item == null)
             return;
 
         for (int i = 0; i < playerInventory.Count; i++)
         {
-            if (playerInventory[i].name == item.name)
+            if (playerInventory[i].name == item.name &&
+                playerInventory[i].type == item.type)
             {
                 playerInventory[i].itemCount--;
 
@@ -109,7 +110,9 @@ foreach (Item inventoryItem in playerInventory)
                     playerInventory.RemoveAt(i);
                 }
 
-                break;
+                RefreshInventoryUI();
+
+                return;
             }
         }
     }

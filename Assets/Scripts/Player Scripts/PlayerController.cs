@@ -1,11 +1,9 @@
-using Unity.Mathematics;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
     public float speed;
     public float groundDist;
 
@@ -13,54 +11,83 @@ public class PlayerController : MonoBehaviour
     public Rigidbody rb;
     public SpriteRenderer sr;
 
+    private PlayerManager playerManager;
+
     void Start()
     {
-        speed = GetComponent<PlayerManager>().baseSpeed;
-        rb = gameObject.GetComponent<Rigidbody>();
+        playerManager = GetComponent<PlayerManager>();
+
+        rb = GetComponent<Rigidbody>();
+
+        if (playerManager == null)
+        {
+            Debug.LogError("PlayerManager not found!");
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (playerManager == null)
+            return;
+
+        // Always get the latest player speed
+        speed = playerManager.baseSpeed;
 
         float x = 0f;
         float y = 0f;
 
         if (Keyboard.current != null)
         {
-            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) x = 1f;
-            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) x = -1f;
+            if (Keyboard.current.dKey.isPressed ||
+                Keyboard.current.rightArrowKey.isPressed)
+                x = 1f;
 
-            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) y = 1f;
-            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) y = -1f;
+            if (Keyboard.current.aKey.isPressed ||
+                Keyboard.current.leftArrowKey.isPressed)
+                x = -1f;
+
+            if (Keyboard.current.wKey.isPressed ||
+                Keyboard.current.upArrowKey.isPressed)
+                y = 1f;
+
+            if (Keyboard.current.sKey.isPressed ||
+                Keyboard.current.downArrowKey.isPressed)
+                y = -1f;
         }
 
         Vector3 moveDir = new Vector3(x, 0, y).normalized;
 
-        transform.Translate(moveDir * speed * Time.deltaTime, Space.World);
+        transform.Translate(
+            moveDir * speed * Time.deltaTime,
+            Space.World
+        );
 
+        // Ground detection
         RaycastHit hit;
+
         Vector3 castPos = transform.position;
         castPos.y += 1;
 
-        if (Physics.Raycast(castPos, -transform.up, out hit, Mathf.Infinity, terrainLayer))
+        if (Physics.Raycast(
+            castPos,
+            -transform.up,
+            out hit,
+            Mathf.Infinity,
+            terrainLayer))
         {
-            if (hit.collider != null)
-            {
-                Vector3 movePos = transform.position;
-                movePos.y = hit.point.y + groundDist;
-                transform.position = movePos;
-            }
+            Vector3 movePos = transform.position;
+            movePos.y = hit.point.y + groundDist;
+            transform.position = movePos;
         }
 
-        // Handle Sprite Flipping
-        if (x < 0)
+        // Sprite flipping
+        if (sr != null)
         {
-            sr.flipX = true;
-        }
-        else if (x > 0)
-        {
-            sr.flipX = false;
+            if (x < 0)
+                sr.flipX = true;
+
+            else if (x > 0)
+                sr.flipX = false;
         }
     }
 }
