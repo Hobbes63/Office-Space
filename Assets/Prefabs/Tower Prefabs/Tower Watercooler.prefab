@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
-  price: 0
+  price: 50
   healAmount: 20
   cooldown: 0
   maxCooldown: 5

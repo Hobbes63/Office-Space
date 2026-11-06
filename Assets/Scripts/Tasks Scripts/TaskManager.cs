@@ -14,7 +14,7 @@ public class TaskManager : MonoBehaviour
     private int lastCompletedHour = -1;
 
     [Header("Player Money")]
-    public int playerMoney = 0;
+    
     public TextMeshProUGUI moneyText;
 
     [Header("Task UI")]
@@ -84,9 +84,13 @@ public class TaskManager : MonoBehaviour
 
         Time.timeScale = 0f;
 
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        if (playerController != null)
+{
+    playerController.enabled = false;
+}
 
+Cursor.lockState = CursorLockMode.None;
+Cursor.visible = true;
         Debug.Log("TASK STARTED");
     }
 
@@ -113,8 +117,8 @@ public class TaskManager : MonoBehaviour
     {
         taskActive = false;
 
-        playerMoney += rewardMoney;
-
+        MoneyManager.Instance.AddMoney(rewardMoney);
+        
         lastCompletedHour =
             officeTimeManager.GetCurrentHour();
 
@@ -128,17 +132,24 @@ public class TaskManager : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+Cursor.visible = false;
+Cursor.lockState = CursorLockMode.Locked;
+
+if (playerController != null)
+{
+    playerController.enabled = true;
+}
+
 
         Debug.Log("TASK COMPLETED! Money earned: $" + rewardMoney);
     }
 
     private void UpdateMoneyUI()
+{
+    if (moneyText != null)
     {
-        if (moneyText != null)
-        {
-            moneyText.text = "Money: $" + playerMoney;
-        }
+        moneyText.text =
+            "Money: $" + MoneyManager.Instance.currentMoney;
     }
+}
 }
