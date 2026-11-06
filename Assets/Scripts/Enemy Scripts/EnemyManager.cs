@@ -21,20 +21,22 @@ public class EnemyManager : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            int spawnIndex = Random.Range(0, Spawnpoints.Count);
+         int spawnIndex = Random.Range(0, Spawnpoints.Count);
 
-            Instantiate(
-                enemiesPrefab,
-                Spawnpoints[spawnIndex].position,
-                Quaternion.identity
-            );
+        ShowSpawnWarning(spawnIndex);
 
-            enemyCount++;
+        Instantiate(
+            enemiesPrefab,
+            Spawnpoints[spawnIndex].position,
+            Quaternion.identity
+        );
+
+        enemyCount++;
         }
 
         enemyWave++;
     }
-    public List<GameObject> spawnIndicators;
+
 
    public void ShowSpawnWarning(int spawnIndex)
 {
