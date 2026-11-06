@@ -1,33 +1,51 @@
-using UnityEngine;
 
-interface IInteractable
-{
-    public void Interact();
-}
+using UnityEngine;
 
 public class Interactor : MonoBehaviour
 {
+    [Header("Interaction Settings")]
     public Transform InteractorSource;
-    public float InteractRange;
-    
+    public float InteractRange = 3f;
+
     void Update()
-{
-    if (Input.GetKeyDown(KeyCode.E))
     {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            FindClosestInteractable();
+        }
+    }
+
+    private void FindClosestInteractable()
+    {
+        if (InteractorSource == null)
+        {
+            Debug.LogWarning("Interactor Source not assigned!");
+            return;
+        }
+
         float smallestDistance = float.MaxValue;
         IInteractable closestObj = null;
 
-        Collider[] hitColliders = Physics.OverlapSphere(InteractorSource.position, InteractRange);
+        Collider[] hitColliders = Physics.OverlapSphere(
+            InteractorSource.position,
+            InteractRange
+        );
+
         foreach (Collider collider in hitColliders)
         {
-            if (collider.gameObject.TryGetComponent(out IInteractable interactObj))
+            IInteractable interactObj =
+                collider.GetComponentInParent<IInteractable>();
+
+            if (interactObj != null)
             {
+                float distance = Vector3.Distance(
+                    InteractorSource.position,
+                    collider.ClosestPoint(InteractorSource.position)
+                );
 
-                float tempDistance = Vector3.Distance(transform.position, collider.transform.position);
-
-                if (tempDistance < smallestDistance)
+                if (distance < smallestDistance)
                 {
-                    smallestDistance = tempDistance;
+                    smallestDistance = distance;
                     closestObj = interactObj;
                 }
             }
@@ -37,10 +55,18 @@ public class Interactor : MonoBehaviour
         {
             closestObj.Interact();
         }
-        else
-        {
-            return;
-        }
     }
-}
+
+    private void OnDrawGizmosSelected()
+    {
+        if (InteractorSource == null)
+            return;
+
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawWireSphere(
+            InteractorSource.position,
+            InteractRange
+        );
+    }
 }
