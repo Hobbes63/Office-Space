@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using TMPro;
 
@@ -5,125 +6,139 @@ public class TaskManager : MonoBehaviour
 {
     public static TaskManager Instance;
 
+    [Header("Task Settings")]
     public string requiredText = "hello world";
     public int rewardMoney = 50;
 
     private bool taskActive = false;
+    private int lastCompletedHour = -1;
+
+    [Header("Player Money")]
     public int playerMoney = 0;
-
-    public GameObject taskPanel;
-
-    public PlayerController playerController;
-
     public TextMeshProUGUI moneyText;
 
-   public TextMeshProUGUI feedbackText;
-
-   public OfficeTimeManager officeTimeManager;
-
-    private int lastCompletedHour = -1; 
-
+    [Header("Task UI")]
+    public GameObject taskPanel;
     public TMP_InputField taskInputField;
-    public bool IsTaskActive()
-{
-    return taskActive;
-}
+    public TextMeshProUGUI feedbackText;
 
-private void Start()
-{
-    if (taskPanel != null)
-    {
-        taskPanel.SetActive(false);
-    }
-
-    UpdateMoneyUI();
-}
-
+    [Header("References")]
+    public PlayerController playerController;
+    public OfficeTimeManager officeTimeManager;
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
     }
 
-public void StartTask()
-{
-    int currentHour = officeTimeManager.GetCurrentHour();
-
-    // Already completed this hour
-    if (lastCompletedHour == currentHour)
+    private void Start()
     {
-        Debug.Log("Task already completed this hour!");
+        if (taskPanel != null)
+            taskPanel.SetActive(false);
 
-        if (feedbackText != null)
+        UpdateMoneyUI();
+    }
+
+    public bool IsTaskActive()
+    {
+        return taskActive;
+    }
+
+    public void StartTask()
+    {
+        if (taskActive)
+            return;
+
+        if (officeTimeManager == null)
         {
-            feedbackText.text = "Come back next hour for more work!";
+            Debug.LogError("OfficeTimeManager reference missing!");
+            return;
         }
 
-        return;
+        int currentHour = officeTimeManager.GetCurrentHour();
+
+        if (lastCompletedHour == currentHour)
+        {
+            if (feedbackText != null)
+                feedbackText.text = "Come back next hour for more work!";
+
+            return;
+        }
+
+        taskActive = true;
+
+        if (feedbackText != null)
+            feedbackText.text = "";
+
+        if (taskInputField != null)
+            taskInputField.text = "";
+
+        if (taskPanel != null)
+            taskPanel.SetActive(true);
+
+        Time.timeScale = 0f;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("TASK STARTED");
     }
 
-    taskActive = true;
-
-    if (feedbackText != null)
+    public void SubmitTask(string playerInput)
     {
-        feedbackText.text = "";
+        if (!taskActive)
+            return;
+
+        if (playerInput.Trim().ToLower() ==
+            requiredText.Trim().ToLower())
+        {
+            CompleteTask();
+        }
+        else
+        {
+            if (feedbackText != null)
+                feedbackText.text = "Incorrect! Try again.";
+
+            Debug.Log("Incorrect answer submitted.");
+        }
     }
 
-    if (taskPanel != null)
+    private void CompleteTask()
     {
-        taskPanel.SetActive(true);
+        taskActive = false;
+
+        playerMoney += rewardMoney;
+
+        lastCompletedHour =
+            officeTimeManager.GetCurrentHour();
+
+        UpdateMoneyUI();
+
+        if (taskInputField != null)
+            taskInputField.text = "";
+
+        if (taskPanel != null)
+            taskPanel.SetActive(false);
+
+        Time.timeScale = 1f;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        Debug.Log("TASK COMPLETED! Money earned: $" + rewardMoney);
     }
 
-    Time.timeScale = 0f;
-
-    Cursor.lockState = CursorLockMode.None;
-    Cursor.visible = true;
-
-    Debug.Log("TASK STARTED");
-}
-
-public void SubmitTask(string playerInput)
-{
-    if (!taskActive)
-        return;
-
-if (playerInput.Trim().ToLower() == requiredText.Trim().ToLower())
-{
-    taskActive = false;
-
-    playerMoney += rewardMoney;
-
-    lastCompletedHour = officeTimeManager.GetCurrentHour();
-
-    UpdateMoneyUI();
-
-    if (taskInputField != null)
+    private void UpdateMoneyUI()
     {
-        taskInputField.text = "";
+        if (moneyText != null)
+        {
+            moneyText.text = "Money: $" + playerMoney;
+        }
     }
-
-    taskPanel.SetActive(false);
-
-    Time.timeScale = 1f;
-
-    Cursor.lockState = CursorLockMode.Locked;
-    Cursor.visible = false;
-
-    Debug.Log("TASK COMPLETED!");
-}
-    else
-    {
-        feedbackText.text = "Incorrect! Try again.";
-        Debug.Log("Incorrect answer submitted.");
-    }
-
-}
-
-private void UpdateMoneyUI()
-{
-    if (moneyText != null)
-    {
-        moneyText.text = "Money: $" + playerMoney;
-    }
-}
 }
