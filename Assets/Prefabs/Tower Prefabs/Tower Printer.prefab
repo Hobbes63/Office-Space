@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  price: 50
   attackCooldown: 0
   maxCooldown: 3
   projectilePrefab: {fileID: 3960058287419870717, guid: 520a75e8ae6e16545b4ee4798b78fd91, type: 3}
