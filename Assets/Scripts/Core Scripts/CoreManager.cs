@@ -1,141 +1,101 @@
+
 using UnityEngine;
-using System.Collections.Generic;
 using TMPro;
 
-public class CoreManager : MonoBehaviour, IInteractable 
+public class CoreManager : MonoBehaviour, IInteractable
 {
-    /*To Do List:
-    Needs to be made interactable with the player:
-        -Add Prompt to interact
-        -Should bring up a pop up UI with a few options:
-            -"Order Towers"
-            -"Check Stash (the inventory)"
-            -"Type up emails" (default task that is always optional for the player to earn some money, how it will work will be explained in another area/script)
-            -"..."
-        -Can be repairable if players have a "Toolkit" item
-        -[Functions from the pop up]"Clock in" (to start the day)/"Clock out" (to go to lunch)
-        -Could also be how players pause?
-    */
+    [Header("Core Health")]
     public float coreCurrentHP;
-    public float coreMaxHP;
-
-    public Inventory playerInventory; //objects will be placed on the core, and 
-    public GameObject effectRadius;
-
-    public TextMeshProUGUI coreHealthText;
-
+    public float coreMaxHP = 100f;
     public float enemyDamage = 20f;
 
-    public enum Abilities { NoBoost, RegenBoost, SpeedBoost, FireRateBoost };
+    public TextMeshProUGUI coreHealthText;
+    public GameObject effectRadius;
 
-    public Abilities coreAttributes = Abilities.NoBoost;
-    // Start is called once before the first execution of Update after the
-    //  MonoBehaviour is created
-
-    public GameObject taskPanel;
-
+    [Header("Interaction")]
     private bool playerInsideCore = false;
 
-
-    void Start()
+    private void Start()
     {
-
-        // Start at full health
         coreCurrentHP = coreMaxHP;
         UpdateHealthDisplay();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void UpdateHealthDisplay()
     {
-        
-    }
-
-    void UpdateHealthDisplay()
-    {
-
         if (coreHealthText != null)
         {
-
-            coreHealthText.text = "Core Health: " + coreCurrentHP;
+            coreHealthText.text =
+                "Core Health: " + coreCurrentHP + "/" + coreMaxHP;
         }
     }
 
     public void TakeDamage(float damage)
     {
+        if (coreCurrentHP <= 0)
+            return;
 
         coreCurrentHP -= damage;
 
-        if (coreCurrentHP <= 0)
-        {
-            coreCurrentHP = 0;
-            Die();
-        }
+        coreCurrentHP = Mathf.Max(0, coreCurrentHP);
 
         UpdateHealthDisplay();
+
+        if (coreCurrentHP <= 0)
+        {
+            Die();
+        }
     }
 
-    void Die()
+    private void Die()
     {
-
         Debug.Log("Core has been destroyed!");
-        // Add core destruction logic here (game over screen, reload scene, etc.)
+
+        // Add game over logic here.
     }
 
     private void OnTriggerEnter(Collider other)
 {
+    Debug.Log("Entered: " + other.name + " Tag: " + other.tag);
+
     if (other.CompareTag("Player"))
     {
         playerInsideCore = true;
+        Debug.Log("Player entered Core.");
     }
 
     if (other.CompareTag("Enemy"))
     {
+        Debug.Log("Enemy hit Core.");
         TakeDamage(enemyDamage);
     }
 }
 
-private void OnTriggerExit(Collider other)
-{
-    if (other.CompareTag("Player"))
+    private void OnTriggerExit(Collider other)
     {
-        playerInsideCore = false;
-    }
-}
-
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (other.CompareTag("Player"))
         {
-
-            TakeDamage(enemyDamage);  
+            playerInsideCore = false;
+            Debug.Log("Player left Core.");
         }
     }
 
-public void Interact()
-{
-    if (!playerInsideCore)
+    public void Interact()
     {
-        Debug.Log("You must be inside the Core to use it!");
-        return;
-    }
+        if (!playerInsideCore)
+        {
+            Debug.Log("You must be inside the Core to use it!");
+            return;
+        }
 
-    Debug.Log("Core Interacted!");
+        if (TaskManager.Instance == null)
+        {
+            Debug.LogError("TaskManager not found!");
+            return;
+        }
 
-    if (TaskManager.Instance != null)
-    {
+        Debug.Log("Core Interacted!");
+
         TaskManager.Instance.StartTask();
-    }
-}
-
-    public void BoostPlayerRegen()
-    {
-        
-    }
-
-    public void AutoFire()
-    {
-        
     }
 }
